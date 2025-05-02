@@ -1,0 +1,10 @@
+CREATE NONCLUSTERED INDEX [sa_i_sc148_isfolder_ismark] ON [dbo].[SC148]
+(
+	[ISFOLDER] ASC,
+	[ISMARK] ASC
+)
+INCLUDE ( [ROW_ID],
+[ID],
+[CODE],
+[DESCR],
+[SP131])

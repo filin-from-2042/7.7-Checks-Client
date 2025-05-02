@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowBackground"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/dhLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/background_light"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:minHeight="@dimen/text_data_height"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/checkCodeTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:textAlignment="center"
+                        android:textColor="@color/kkm_item_dh_top_title"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/text_data_height"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/companyIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="16dp"
+                            app:srcCompat="@drawable/ic_company_icon"
+                            android:contentDescription="@string/companyIconDescription"/>
+
+                        <TextView
+                            android:id="@+id/companyNameTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/companyIcon"
+                            android:text="@string/companyText"
+                            android:textColor="@color/kkm_item_dh_title" />
+
+                        <TextView
+                            android:id="@+id/companyNameValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/companyNameTitle"
+                            android:layout_toRightOf="@+id/companyIcon"
+                            android:textColor="@color/kkm_item_dh_value"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/text_data_height"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/stockIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="16dp"
+                            app:srcCompat="@drawable/ic_store_icon"
+                            android:contentDescription="@string/stockIconDecription"/>
+
+                        <TextView
+                            android:id="@+id/stockNameTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/stockIcon"
+                            android:text="@string/storeText"
+                            android:textColor="@color/kkm_item_dh_title" />
+
+                        <TextView
+                            android:id="@+id/stockNameValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/stockNameTitle"
+                            android:layout_toRightOf="@+id/stockIcon"
+                            android:textColor="@color/kkm_item_dh_value" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/cashboxNameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/text_data_height"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/cashboxIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="16dp"
+                            app:srcCompat="@drawable/ic_cashbox_icon"
+                            android:contentDescription="@string/cashboxIconDescription"/>
+
+                        <TextView
+                            android:id="@+id/cashboxNameTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/cashboxIcon"
+                            android:text="@string/cashboxText"
+                            android:textColor="@color/kkm_item_dh_title" />
+
+                        <TextView
+                            android:id="@+id/chashboxNameValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/cashboxNameTitle"
+                            android:layout_toRightOf="@+id/cashboxIcon"
+                            android:textColor="@color/kkm_item_dh_value" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/text_data_height"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/totalIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="16dp"
+                            app:srcCompat="@drawable/ic_total_icon"
+                            android:contentDescription="@string/totalIconDescription"/>
+
+                        <TextView
+                            android:id="@+id/totalTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/totalIcon"
+                            android:text="@string/totalText"
+                            android:textColor="@color/kkm_item_dh_title" />
+
+                        <TextView
+                            android:id="@+id/totalValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/totalTitle"
+                            android:layout_toRightOf="@+id/totalIcon"
+                            android:textColor="@color/kkm_item_dh_value" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/NDSLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/text_data_height"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ndsIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="16dp"
+                            app:srcCompat="@drawable/ic_nds_icon"
+                            android:contentDescription="@string/ndsIconDescription"/>
+
+                        <TextView
+                            android:id="@+id/NDSTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/ndsIcon"
+                            android:text="@string/ndsText"
+                            android:textColor="@color/kkm_item_dh_title" />
+
+                        <TextView
+                            android:id="@+id/NDSValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/NDSTitle"
+                            android:layout_toRightOf="@+id/ndsIcon"
+                            android:textColor="@color/kkm_item_dh_value" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/returnReasonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/text_data_height"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/returnIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        app:srcCompat="@drawable/ic_person_icon"
+                        android:contentDescription="@string/returnIconDescription"/>
+
+                    <TextView
+                        android:id="@+id/reasonTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/returnIcon"
+                        android:text="@string/reasonText"
+                        android:textColor="@color/kkm_item_dh_title" />
+
+                    <TextView
+                        android:id="@+id/reasonContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/reasonTitle"
+                        android:layout_toRightOf="@+id/returnIcon"
+                        android:textColor="@color/kkm_item_dh_value" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/text_data_height"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/personIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        app:srcCompat="@drawable/ic_person_icon"
+                        android:contentDescription="@string/personIconDescription"/>
+
+                    <TextView
+                        android:id="@+id/userNameTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/personIcon"
+                        android:text="@string/usernameText"
+                        android:textColor="@color/kkm_item_dh_title" />
+
+                    <TextView
+                        android:id="@+id/userNameValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/userNameTitle"
+                        android:layout_toRightOf="@+id/personIcon"
+                        android:textColor="@color/kkm_item_dh_value" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/dtLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/kkm_items_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:visibility="gone"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_action_remove" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:visibility="gone"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_action_edit" />
+
+    <ProgressBar
+        android:id="@+id/initProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

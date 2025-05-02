@@ -1,0 +1,56 @@
+-- =============================================
+-- Description:	Обновляет чек
+-- =============================================
+CREATE PROCEDURE [sa_sp_UpdateExistCheck]
+	@iddoc char(9),
+	@costSum numeric(14,9),
+	@ResultType int OUTPUT
+AS
+BEGIN
+	BEGIN TRANSACTION
+		SET @ResultType = 0
+
+		-- проверка чека на проведение
+		DECLARE @IsClosed bit
+		SET @IsClosed=0
+		SELECT @IsClosed = CLOSED
+		FROM [dbo].[_1SJOURN]
+		WHERE IDDOC=@iddoc
+		IF @IsClosed =1
+		BEGIN
+			SET @ResultType = 1
+			ROLLBACK
+			RETURN @ResultType
+		END
+
+		UPDATE [dbo].[_1SJOURN]
+		SET [ACTCNT] = [ACTCNT]+1
+		WHERE IDDOC=@iddoc
+
+		-- запись изменений для обмена на каждую базу
+		DECLARE @codeDB char(3)
+		DECLARE @cursor CURSOR
+		SET @cursor  = CURSOR SCROLL FOR SELECT [DBSIGN] FROM [dbo].[_1SDBSET]
+		OPEN @cursor
+		FETCH NEXT FROM @cursor INTO @codeDB
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			exec [dbo].[_1sp_RegisterUpdate] @codeDB,1473,@iddoc,' '
+			IF (@@error <> 0)
+ 			BEGIN
+ 				SET @ResultType = 2
+				ROLLBACK
+			 END
+			FETCH NEXT FROM @cursor INTO @codeDB
+		END
+		CLOSE @cursor
+
+		-- данные в шапке чека
+		UPDATE [dbo].[DH1473]
+		SET [SP1458] = @costSum,
+			[SP1471] = @costSum
+		WHERE [IDDOC] = @iddoc
+
+	COMMIT
+
+END

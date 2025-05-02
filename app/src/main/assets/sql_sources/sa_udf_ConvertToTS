@@ -1,0 +1,32 @@
+-- =============================================
+-- Description:	Перевод числа из 10-ой в 36-ую систему счисления
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_ConvertToTS]
+(
+	@decimal int
+)
+RETURNS varchar(255)
+AS
+BEGIN
+
+	DECLARE @res varchar(255)
+	SET @res=''
+	DECLARE @data varchar(37)
+	DECLARE @integet int
+	DECLARE @remainder int
+	SET @data = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	SET @integet = @decimal / 36
+	SET @remainder = @decimal % 36
+	SET @res = SUBSTRING(@data,@remainder+1,1) + @res
+
+	WHILE @integet>35
+	BEGIN
+		SET @remainder = @integet % 36
+		SET @integet = @integet / 36
+		SET @res = SUBSTRING(@data,@remainder+1,1) + @res
+	END
+
+	SET @res = SUBSTRING(@data,@integet+1,1) + @res
+
+	RETURN @res
+END

@@ -1,0 +1,99 @@
+-- =============================================
+-- Description:	Возвращает табличную часть документа из журнала ККМ
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetKKMItemDT]
+(
+	@iddoc char(9)
+)
+RETURNS
+@result TABLE
+(
+	product_id char(9),
+	code char(6),
+	articul char(25),
+	name char(70),
+	item_count numeric (13,3),
+	item_price varchar(255)
+)
+AS
+BEGIN
+
+	DECLARE @docType int
+	SELECT @docType=J.IDDOCDEF
+	FROM [dbo].[_1SJOURN] J
+	WHERE J.IDDOC = @iddoc
+	--AND J.ISMARK = 0
+
+	-- обычный чек
+	IF @docType=1473
+	BEGIN
+		INSERT INTO @result
+		SELECT SP1466 as product_id
+		,NULL as code
+		,NULL as articul
+		,NULL as name
+		,SP1467 as item_count
+		,SP1470 AS item_price
+		FROM [dbo].[DT1473]
+		WHERE IDDOC = @iddoc
+	END
+
+	-- возврат от покупателя
+	IF @docType=536
+	BEGIN
+		INSERT INTO @result
+		SELECT SP520 as product_id
+		,NULL as code
+		,NULL as articul
+		,NULL as name
+		,SP521 as item_count
+		,SP525 AS item_price
+		FROM [dbo].[DT536]
+		WHERE IDDOC = @iddoc
+	END
+
+	-- отчет ккм
+	IF @docType=802
+	BEGIN
+		INSERT INTO @result
+		SELECT SP789 as product_id
+		,NULL as code
+		,NULL as articul
+		,NULL as name
+		,SP790 as item_count
+		,SP793 AS item_price
+		FROM [dbo].[DT802]
+		WHERE IDDOC = @iddoc
+	END
+
+	DECLARE @product_id char(9)
+	DECLARE @code char(6)
+	DECLARE @articul char(25)
+	DECLARE @name char(70)
+
+	DECLARE RCursor CURSOR FOR
+	SELECT product_id FROM @result
+	OPEN RCursor
+	FETCH NEXT FROM RCursor
+	INTO @product_id
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+
+		SELECT @code=CODE, @articul=ARTICUL, @name=DESCR  FROM [dbo].[sa_udf_GetNomenclatureData] (@product_id)
+
+		UPDATE R
+		SET code = @code,
+		articul = @articul,
+		name = @name
+		FROM @result R
+		WHERE R.product_id = @product_id
+
+	FETCH NEXT FROM RCursor
+	INTO @product_id
+	END
+	CLOSE RCursor
+	DEALLOCATE RCursor
+
+	RETURN
+END

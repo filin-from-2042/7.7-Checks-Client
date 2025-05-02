@@ -1,0 +1,31 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">20dp</dimen>
+    <dimen name="nav_header_vertical_spacing_username">6dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="padding_list_row">16dp</dimen>
+    <dimen name="padding_right_list_row">16dp</dimen>
+    <dimen name="padding_top_list_row">3dp</dimen>
+    <dimen name="padding_bottom_list_row">3dp</dimen>
+    <dimen name="padding_top_whole_list_row">6dp</dimen>
+    <dimen name="msg_text_primary">16sp</dimen>
+    <dimen name="msg_text_secondary">14sp</dimen>
+    <dimen name="item_cost">12sp</dimen>
+
+
+    <dimen name="rcl_row_text_padding_left">72dp</dimen>
+    <dimen name="rcl_row_text_padding_top">16dp</dimen>
+    <dimen name="rcl_row_text_padding_bottom">20dp</dimen>
+    <dimen name="rcl_container_bottom_padding">8dp</dimen>
+    <dimen name="rcl_container_top_padding">8dp</dimen>
+    <dimen name="rcl_container_left_padding">16dp</dimen>
+
+
+    <dimen name="text_data_height">48dp</dimen>
+
+    <dimen name="text_feild_horizontal_padding">8dp</dimen>
+    <dimen name="text_feild_vertical_padding">8dp</dimen>
+</resources>

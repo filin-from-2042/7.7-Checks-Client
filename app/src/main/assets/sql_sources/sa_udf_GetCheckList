@@ -1,0 +1,53 @@
+-- =============================================
+-- Description:	Возвращает список чеков в заданом диапазоне дней
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetCheckList]
+(
+	@dateStart datetime,
+	@dateEnd datetime
+)
+RETURNS
+@result TABLE
+(
+	[ROW_ID] int,
+	[IDDOC] char(9),
+	[DATE] datetime ,
+	[DOCTYPE] int,
+	[DOCNUMBER] char(10),
+	[SUMM] numeric (14,2),
+	[USERNAME] char(50),
+	[CLOSED] tinyint
+)
+AS
+BEGIN
+
+	DECLARE @symDateStart char(23)
+	SET @symDateStart = CONVERT(char(8), CAST(@dateStart as datetime), 112)+'     0     0   '
+	DECLARE @symDateEnd char(23)
+	SET @symDateEnd = CONVERT(char(8), CAST(@dateEnd as datetime), 112)+'FHML6O     0   '
+
+
+	INSERT INTO @result
+	SELECT ROW_ID
+	,[IDDOC]
+	,CONVERT(datetime, SUBSTRING ([DATE_TIME_IDDOC],1 , 8), 104) as [DATE]
+	,[IDDOCDEF] as [DOCTYPE]
+	,[DOCNO] as [DOCNUMBER]
+	,CASE
+		-- возврат от покупателя
+		WHEN [IDDOCDEF]=536 THEN (SELECT TOP 1 [SP525] FROM [dbo].[DH536] WHERE IDDOC = J.[IDDOC])
+		-- отчет ККМ
+		WHEN [IDDOCDEF]=802 THEN (SELECT TOP 1 [SP794] FROM [dbo].[DH802] WHERE IDDOC = J.[IDDOC])
+		-- чек ККМ
+		WHEN [IDDOCDEF]=1473 THEN (SELECT TOP 1 [SP1471] FROM [dbo].[DH1473] WHERE IDDOC = J.[IDDOC])
+	END as [SUMM]
+	, (SELECT U.DESCR FROM [dbo].[SC201] U WHERE U.ID = J.[SP1872]) as [USERNAME]
+	, [CLOSED] as [DOCSTATUS]
+	FROM [dbo].[_1SJOURN] J
+	WHERE IDJOURNAL=1970 AND J.ISMARK=0
+	AND DATE_TIME_IDDOC>=@symDateStart
+	AND DATE_TIME_IDDOC<=@symDateEnd
+	ORDER BY IDJOURNAL, DATE_TIME_IDDOC
+
+	RETURN
+END

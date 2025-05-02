@@ -1,0 +1,184 @@
+-- =============================================
+-- Description:	Создает новый чек
+-- =============================================
+CREATE PROCEDURE [dbo].[sa_sp_CreateNewCheck]
+
+	@docno char(10),
+	@stockID char(9),
+	@cashBox char(9),
+	@costSum numeric(14,9),
+	@authorID char(9),
+	@authorCompanyID char(9),
+	@authorCurrProject char(9),
+	@period varchar(10),
+	@addedDocNum char(9) OUTPUT,
+	@ResultType int OUTPUT
+AS
+BEGIN
+
+	/*
+		Возвращаемый результат является статусом операции(ResultType).
+		0 - операция прошла успешно.
+		1 - завершилась с ошибкой, не удалось добавить чек в журнал документов
+		2 - завершилась с ошибкой, не удалось добавить данные в список изменений для УРБД
+		3 - завершилась с ошибкой, не удалось установить новый максимальный id для чеков
+		4 - завершилась с ошибкой, не удалось добавить реквизиты чека
+		5 - завершилась с ошибкой, чек с таким номером документа уже существует в общем журнале
+	*/
+	SET @ResultType = 0
+
+	-- блокировка журнала
+	--EXEC [dbo].[_1sp__1SJOURN_TLockX]
+
+	DECLARE @currDate datetime
+	SET @currDate = GETDATE()
+
+	-- префикс чека с периодичностью в год
+	DECLARE @checkDnPrefix char(18)
+	SET @checkDnPrefix = (select [dbo].[sa_udf_GetDnPrefix] ('1473',@period))
+
+	-- проверка на существование такого документа
+	DECLARE @alreadyCreatedCount int
+	SELECT @alreadyCreatedCount=COUNT(ROW_ID)
+	FROM [dbo].[_1SJOURN]
+	WHERE RTRIM(LTRIM(DNPREFIX))= RTRIM(LTRIM(@checkDnPrefix))
+	AND RTRIM(LTRIM(DOCNO))=RTRIM(LTRIM(@docno))
+
+	IF @alreadyCreatedCount=0
+	BEGIN
+		BEGIN TRANSACTION
+			-- получение максимального используемого id документов из UIDCTL
+			DECLARE @currMaxIdUIDCTL char(9)
+			SELECT @currMaxIdUIDCTL=MAXID
+			FROM [dbo].[_1SUIDCTL](NOLOCK)
+			WHERE TYPEID=0
+
+			-- получение максимального id из общего журнала документов
+			DECLARE @currMaxIdJOURN char(9)
+			SELECT @currMaxIdJOURN=MAX(IDDOC)
+			FROM [dbo].[_1SJOURN](NOLOCK)
+
+			------- добавление нового чека
+
+			-- формирование нового id
+			DECLARE @NEWDOCID varchar(255)
+			DECLARE @MIDDLEINT INT
+			SELECT @MIDDLEINT=[dbo].[sa_udf_ConvertFromTS] (SUBSTRING(@currMaxIdUIDCTL,1,6))
+
+			SET @MIDDLEINT = @MIDDLEINT + 1
+			SELECT @NEWDOCID = [dbo].[sa_udf_ConvertToTS] (@MIDDLEINT)
+			SELECT @NEWDOCID = [dbo].[sa_udf_AddSpaces] (@NEWDOCID,6,0)
+
+			DECLARE @urBDprefix char(3)
+			SELECT @urBDprefix = ISNULL(DBSIGN,'') FROM [dbo].[_1SSYSTEM]
+			SELECT @urBDprefix = [dbo].[sa_udf_AddSpaces] (@urBDprefix,3,1)
+
+			DECLARE @newFullDocID char(9)
+			SET @newFullDocID = @NEWDOCID+@urBDprefix
+
+			-- закодированное время из DATE_TIME_IDDOC
+			DECLARE @CURRYEAR char(4)
+			SET @CURRYEAR = CONVERT(char(4), YEAR(@currDate))
+			-- месяц в формате MM
+			DECLARE @CURRMONTH char(2)
+			SET @CURRMONTH = RIGHT('0' + RTRIM(MONTH(@currDate)),2)
+			-- день в формате DD
+			DECLARE @CURRDAY char(2)
+			SET @CURRDAY = RIGHT('0' + RTRIM(DAY(@currDate)),2)
+
+			DECLARE @timeIDDOC char(6)
+			SELECT @timeIDDOC = [dbo].[sa_udf_AddSpaces] (
+										(SELECT [dbo].[sa_udf_ConvertToTS] (DATEDIFF(second,DATEADD(dd, 0, DATEDIFF(dd, 0, GETDATE())),@currDate)*10000))
+										,6
+										,1)
+			DECLARE @dateTimeIDDOC char(23)
+			SET @dateTimeIDDOC = @CURRYEAR+@CURRMONTH+@CURRDAY+@timeIDDOC+@newFullDocID
+
+			-- ID журнала документов "Журнал чеков ККМ" - 1970
+			INSERT INTO [dbo].[_1SJOURN]  ([IDJOURNAL],[IDDOC]				,[IDDOCDEF] ,[APPCODE]  ,[DATE_TIME_IDDOC]  ,[DNPREFIX]   	,[DOCNO] ,[CLOSED]   ,[ISMARK]   ,[ACTCNT]   ,[VERSTAMP]   ,[RF1997]  ,[RF2004]   ,[RF2009]   ,[RF2016]   ,[RF2025]   ,[RF2034]   ,[RF2044]   ,[RF2051]   ,[RF2066]   ,[RF2080]   ,[RF2089]   ,[RF2103]   ,[RF2113]   ,[RF2124]   ,[RF2133]   ,[RF2140]   ,[SP1872]   ,[SP1873]				,[SP1874]			,[SP1875]		 ,[DS1869]   ,[DS1870]   ,[DS1871])
+							        VALUES( 1970	  ,@newFullDocID		,1473		,1			,@dateTimeIDDOC		,@checkDnPrefix ,@docno	 ,0			 ,0			 ,0			 ,0			   ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,0		  ,@authorID  ,@authorCurrProject	,@authorCompanyID	,@authorCompanyID,0			 ,0			 ,0)
+		 	IF (@@error <> 0)
+		 	BEGIN
+				SET @ResultType = 1
+				ROLLBACK
+		 	END
+
+			DECLARE @journMaxRowId int
+			SELECT @journMaxRowId=MAX(ROW_ID)
+			FROM [dbo].[_1SJOURN]
+
+			-- запись изменений для обмена на каждую базу
+			DECLARE @codeDB char(3)
+			DECLARE @cursor CURSOR
+			SET @cursor  = CURSOR SCROLL FOR SELECT [DBSIGN] FROM [dbo].[_1SDBSET]
+			OPEN @cursor
+			FETCH NEXT FROM @cursor INTO @codeDB
+			WHILE @@FETCH_STATUS = 0
+			BEGIN
+				exec [dbo].[_1sp_RegisterUpdate] @codeDB,1473,@newFullDocID,' '
+				IF (@@error <> 0)
+		 		BEGIN
+					SET @ResultType = 2
+					ROLLBACK
+				 END
+				FETCH NEXT FROM @cursor INTO @codeDB
+			END
+			CLOSE @cursor
+
+			-- установка нового максимального id для документов
+			exec [dbo].[_1sp__1SUIDCTL_SetMaxID] 0,@newFullDocID
+			IF (@@error <> 0)
+		 	BEGIN
+				SET @ResultType = 3
+				ROLLBACK
+			END
+
+			-- текущая валюта
+			DECLARE @currency char(9)
+			SELECT @currency=VALUE
+			FROM [dbo].[_1SCONST](NOLOCK)
+			WHERE ID=12 and RTRIM(LTRIM(OBJID))='0' and DATE<='1753-01-01 00:00:00'
+			-- курс валюты
+			DECLARE @course numeric(9,4)
+			SELECT TOP 1 @course=CAST(VALUE as numeric(9,4))
+			FROM [dbo].[_1SCONST]
+			WHERE ID=52 and OBJID=@currency and DATE<=@currDate
+			ORDER BY ID DESC, OBJID DESC, DATE DESC, TIME DESC, DOCID DESC
+			-- кратность
+			DECLARE @multiplicity numeric(7,0)
+			SELECT TOP 1 @multiplicity=CAST(VALUE as numeric(7,0))
+			FROM [dbo].[_1SCONST]
+			WHERE ID=53 and OBJID=@currency and DATE<=@currDate
+			ORDER BY ID DESC, OBJID DESC, DATE DESC, TIME DESC, DOCID DESC
+
+			-- Добавления шапки документа ЧекККС
+			-- '   19Y   ' - код операции - Чек
+			INSERT INTO [dbo].[DH1473] ([IDDOC]  	,[SP1454]	,[SP1455]   ,[SP1456]   ,[SP1457]   ,[SP2433]     ,[SP1458]	,[SP1459]   ,[SP1460]  ,[SP1461]  ,[SP1462]   ,[SP1463]  	  ,[SP2678]   ,[SP1471], [SP1876])
+                                VALUES(@newFullDocID,@stockID	,@cashBox	,@currency	,@course    ,@multiplicity,@costSum	,'   19Y   ',0		   ,0		  ,'     0   ','   0     0   ','     0   ',@costSum,'')
+			IF (@@error <> 0)
+		 	BEGIN
+				SET @ResultType = 4
+				ROLLBACK
+			END
+
+			-- удаление ссылок на документ
+			UPDATE [dbo].[_1SCRDOC]
+			SET FLAGS=FLAGS&~1
+			WHERE CHILDID=@newFullDocID
+			If @@ROWCOUNT>0 DELETE FROM [dbo].[_1SCRDOC] WHERE CHILDID=@newFullDocID and FLAGS=0
+
+			--удаление блокировки номера документа
+			DELETE FROM [dbo].[_1SDNLOCK] WHERE  DNPREFIX=@checkDnPrefix AND DOCNO=@docno
+
+			SET @addedDocNum = @newFullDocID
+			--SELECT @newFullDocID AS DOCID
+		COMMIT
+	END
+	ELSE
+	BEGIN
+		SET @ResultType = 5
+	END
+
+	RETURN @ResultType
+
+END

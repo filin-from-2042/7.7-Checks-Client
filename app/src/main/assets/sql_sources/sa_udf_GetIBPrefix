@@ -1,0 +1,20 @@
+-- =============================================
+-- Description:	Возвращает префикс текущей информационной базы
+-- =============================================
+
+CREATE FUNCTION [dbo].[sa_udf_GetIBPrefix]
+(
+)
+RETURNS varchar(255)
+AS
+BEGIN
+	DECLARE @PREFIX varchar(266)
+
+	SELECT TOP 1  @PREFIX=VALUE
+	FROM [dbo].[_1SCONST]
+	WHERE ID='21' and OBJID='     0   ' and DATE<='1753-01-01 00:00:00'
+	ORDER BY ID DESC, OBJID DESC, DATE DESC, TIME DESC, DOCID DESC
+
+	RETURN @PREFIX
+
+END

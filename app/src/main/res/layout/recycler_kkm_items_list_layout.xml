@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/background_light"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/padding_bottom_list_row"
+    android:paddingEnd="?listPreferredItemPaddingRight"
+    android:paddingLeft="?listPreferredItemPaddingLeft"
+    android:paddingRight="?listPreferredItemPaddingRight"
+    android:paddingStart="?listPreferredItemPaddingLeft"
+    android:paddingTop="@dimen/padding_top_whole_list_row"
+    android:id="@+id/row_container">
+
+    <LinearLayout
+        android:id="@+id/message_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:paddingEnd="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="@dimen/padding_top_list_row"
+        android:layout_toLeftOf="@+id/cost_container"
+        android:layout_toStartOf="@+id/cost_container">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/name"
+            android:textSize="@dimen/msg_text_primary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/code"
+            android:textSize="@dimen/msg_text_secondary"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cost_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/padding_list_row"
+        android:paddingLeft="@dimen/padding_right_list_row"
+        android:paddingRight="@dimen/padding_right_list_row">
+
+        <TextView
+            android:id="@+id/item_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/item_cost"
+            android:textSize="@dimen/item_cost"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/item_count"
+            android:textSize="@dimen/item_cost"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/items_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/item_cost"
+            android:textSize="@dimen/item_cost"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</RelativeLayout>

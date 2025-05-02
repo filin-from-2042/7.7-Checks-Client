@@ -1,0 +1,30 @@
+-- =============================================
+-- Description:	Перевод из 36ричной системы в 10чную
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_ConvertFromTS]
+(
+	@startnumber varchar(255)
+)
+RETURNS  int
+AS
+BEGIN
+	SET @startnumber = RTRIM(LTRIM(@startnumber))
+	DECLARE @data varchar(36)
+	SET @data = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	DECLARE @resultNumber int
+	SET @resultNumber=0
+	DECLARE @startlen int
+	SET @startlen = LEN(@startnumber)
+
+	DECLARE @powerCounter int
+	SET @powerCounter = 0
+
+	WHILE @startlen>0
+	BEGIN
+		SET @resultNumber = @resultNumber + (CHARINDEX(SUBSTRING(@startnumber,@startlen,1),@data,1)-1)*POWER(36,@powerCounter)
+		SET @startlen = @startlen-1
+		SET @powerCounter = @powerCounter+1
+	END
+
+	RETURN @resultNumber
+END

@@ -1,0 +1,25 @@
+-- =============================================
+-- Description:	Инициализация нового чека
+-- =============================================
+CREATE PROCEDURE [dbo].[sa_sp_initNewCheck]
+    @PERIOD varchar(10),
+    @FREENUMBER varchar(max) OUTPUT
+AS
+BEGIN
+	DECLARE @CURIBPREFIX varchar(255)
+	SELECT @CURIBPREFIX = [dbo].[sa_udf_GetIBPrefix] ()
+
+	DECLARE @CHECKDNPREFIX char(18)
+	SET @CHECKDNPREFIX = (select [dbo].[sa_udf_GetDnPrefix] ('1473',@PERIOD))
+
+	SELECT @FREENUMBER = [dbo].[sa_udf_GetFreeNumber] (@CURIBPREFIX,@CHECKDNPREFIX)
+
+	DECLARE @CHECKDNPREFIXBLOCK char(28)
+	SET @CHECKDNPREFIXBLOCK = CAST(@CHECKDNPREFIX as char(28))
+
+	EXEC [dbo].[sa_sp_BlockDocNumber]
+		@DNPREFIX = @CHECKDNPREFIXBLOCK,
+		@DOCNUMBER = @FREENUMBER,
+		@PERIOD=@PERIOD,
+		@BLOCK = 1
+END

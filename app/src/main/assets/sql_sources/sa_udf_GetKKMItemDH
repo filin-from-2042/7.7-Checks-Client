@@ -1,0 +1,95 @@
+-- =============================================
+-- Description:	Возвращает данные по объекту из журнала ККМ
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetKKMItemDH]
+(
+	@iddoc char(9)
+)
+RETURNS @result TABLE
+(
+	docno char(10),
+	docType int,
+	docDate datetime,
+	companyName char(50),
+	stockName char(50) ,
+	cashboxName  char(50),
+	summ numeric(14,2),
+	sumNDS numeric(14,2),
+	userID char(9),
+	userName char(50),
+	cause char(50),	-- основание при возврате
+	closed tinyint
+)
+AS
+BEGIN
+
+	INSERT INTO @result
+	SELECT TOP 1 DOCNO AS docno
+	,IDDOCDEF AS docType
+	,CAST(SUBSTRING([DATE_TIME_IDDOC], 1, 8) as datetime) AS docDate
+	,(SELECT TOP 1 DESCR FROM [dbo].[SC321] SC321 WHERE SC321.ID = J.SP1874) AS companyName
+	,NULL as stockName
+	,NULL as cashboxName
+	,NULL as summ
+	,NULL as summNDS
+	,J.SP1872 as userID
+	,(SELECT TOP 1 [DESCR] FROM [dbo].[SC201] SC201 WHERE SC201.ID = J.SP1872) as userName
+	,NULL
+	,J.CLOSED
+	FROM [dbo].[_1SJOURN] J
+	WHERE J.IDDOC = @iddoc AND J.ISMARK = 0 AND IDJOURNAL=1970
+
+	DECLARE @docType int
+	SELECT @docType=[docType]
+	FROM @result
+
+	-- обычный чек
+	IF @docType=1473
+	BEGIN
+	 UPDATE R
+	 SET R.stockName = (SELECT TOP 1 stocks.DESCR
+						FROM [dbo].[SC288] stocks
+						WHERE stocks.ID = checkTitles.SP1454  AND stocks.ISMARK = 0),
+		R.cashboxName = (SELECT TOP 1 cashBoxes.DESCR
+						FROM [dbo].[SC106] cashBoxes
+						WHERE cashBoxes.ID  = checkTitles.SP1455 AND cashBoxes.ISMARK = 0),
+		R.summ = checkTitles.SP1471
+	 FROM @result R
+	 INNER JOIN [dbo].[DH1473] checkTitles ON checkTitles.IDDOC=@iddoc
+	END
+
+	 -- возврат от покупателя
+	IF @docType=536
+	BEGIN
+	 UPDATE R
+	 SET R.stockName = (SELECT TOP 1 stocks.DESCR
+						FROM [dbo].[SC288] stocks
+						WHERE stocks.ID = returnTitles.SP505  AND stocks.ISMARK = 0),
+		R.summ = returnTitles.SP525,
+		R.sumNDS = returnTitles.SP527,
+		R.cause = (SELECT J.DOCNO+' от '+CONVERT(char,CAST(SUBSTRING(J.[DATE_TIME_IDDOC],1,8) AS datetime),104 )
+					FROM [dbo].[_1SJOURN] J
+					WHERE J.IDDOC=(SELECT SUBSTRING(returnTitles.SP504,5,9))  )
+	 FROM @result R
+	 INNER JOIN [dbo].[DH536] returnTitles ON returnTitles.IDDOC=@iddoc
+	END
+
+	-- отчет ккм
+	IF @docType=802
+	BEGIN
+	 UPDATE R
+	 SET R.stockName = (SELECT TOP 1 stocks.DESCR
+						FROM [dbo].[SC288] stocks
+						WHERE stocks.ID = KKMReports.SP771  AND stocks.ISMARK = 0),
+		 R.cashboxName = (SELECT TOP 1 cashBoxes.DESCR
+						FROM [dbo].[SC106] cashBoxes
+						WHERE cashBoxes.ID  = KKMReports.SP772 AND cashBoxes.ISMARK = 0),
+		R.summ = KKMReports.SP794,
+		R.sumNDS = KKMReports.SP796
+	 FROM @result R
+	 INNER JOIN [dbo].[DH802] KKMReports ON KKMReports.IDDOC=@iddoc
+	END
+
+
+	RETURN
+END

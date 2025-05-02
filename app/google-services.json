@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "817000783738",
+    "firebase_url": "https://trade-assistant-6f2c2.firebaseio.com",
+    "project_id": "trade-assistant-6f2c2",
+    "storage_bucket": "trade-assistant-6f2c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817000783738:android:04a7334b96453e4a",
+        "android_client_info": {
+          "package_name": "com.tradeassistant1c77"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817000783738-r1pk5melad6gm05knqocaoh3smbseul2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tradeassistant1c77",
+            "certificate_hash": "5e2c351bfc7f7f07d2f2e74f4b8a7dbb6c94d7ab"
+          }
+        },
+        {
+          "client_id": "817000783738-2mlhbmnqdedchar17b1es06joivskq98.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "817000783738-2mlhbmnqdedchar17b1es06joivskq98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGBYB122wX2i-brhhhR0HRgHK6K-avN5E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817000783738-2mlhbmnqdedchar17b1es06joivskq98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

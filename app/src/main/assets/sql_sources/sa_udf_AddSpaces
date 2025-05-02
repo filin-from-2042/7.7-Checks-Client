@@ -1,0 +1,49 @@
+-- =============================================
+-- Description:	Добавляет переданное кол-во пробелов к данным с указанной стороны
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_AddSpaces]
+(
+	@data varchar(255),
+	@resLength int,
+	@position bit	-- 0-пробелы слева
+					-- 1-пробелы справа
+)
+RETURNS varchar(255)
+AS
+BEGIN
+
+	SET @data = RTRIM(LTRIM(@data))
+
+	DECLARE @spacesCount int
+	DECLARE @currDataLen int
+	SET @currDataLen =  LEN(@data)
+
+	IF @resLength > @currDataLen
+	BEGIN
+		SET @spacesCount = @resLength- LEN(@data)
+	END
+	ELSE
+	BEGIN
+		RETURN SUBSTRING(@data,1,@resLength)
+	END
+
+	DECLARE @counter INT
+	SET @counter = 0
+
+	WHILE @counter < @spacesCount
+	BEGIN
+		IF @position=0
+		BEGIN
+			SET @data = ' '+@data
+		END
+
+		IF @position=1
+		BEGIN
+			SET @data = @data+' '
+		END
+
+		SET @counter = @counter+1
+	END
+
+	RETURN @data
+END

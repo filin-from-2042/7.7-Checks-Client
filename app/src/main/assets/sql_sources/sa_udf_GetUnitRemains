@@ -1,0 +1,85 @@
+-- =============================================
+-- Description:	Возвращает остатки по id номенклатуры с учетом точки актуальности
+-- =============================================
+CREATE FUNCTION [sa_udf_GetUnitRemains]
+(
+	@nomID char(9)
+)
+RETURNS @RESULT TABLE
+(
+	STOREID char(9),        -- ид склада
+	STORENAME char(50),		-- наименование склада
+	UNITCOUNT numeric(14,5)	-- кол-во остатков
+)
+AS
+BEGIN
+-- дата актуальности для регистра
+	DECLARE @ACTPERIOD datetime
+	SELECT @ACTPERIOD=[CURDATE]
+	FROM [dbo].[_1SSYSTEM]
+
+	DECLARE @PERIODR datetime
+	DECLARE @PERIODN char(12)
+	DECLARE @PERIODK char(12)
+
+	DECLARE @CURRYEAR char(4)
+	SET @CURRYEAR = CONVERT(char(4), YEAR(@ACTPERIOD))
+	-- месяц в формате MM
+	DECLARE @CURRMONTH char(2)
+	SET @CURRMONTH = RIGHT('0' + RTRIM(MONTH(@ACTPERIOD)),2)
+	-- день в формате DD
+	DECLARE @CURRDAY char(2)
+	SET @CURRDAY = RIGHT('0' + RTRIM(DAY(@ACTPERIOD)),2)
+
+	-- дата выборки остатков по регистру остатков
+	SET @PERIODR =  CONVERT(datetime,@CURRYEAR + @CURRMONTH +  '01' ,112)
+	-- начало периода для регистра движений
+	SET @PERIODN = @CURRMONTH +'/' + @CURRYEAR + '/1'
+	-- конец периода для регистра движений
+	SET @PERIODK = @CURRMONTH  + '/' + @CURRYEAR + '/' + @CURRDAY
+
+	INSERT INTO @RESULT
+	SELECT RG.Склад
+	,S.DESCR
+	,RG.КонОст
+	FROM (
+				SELECT
+					TMP.Товар As Товар,
+					TMP.Склад As Склад,
+					SUM(TMP.НачОст + TMP.Приход - TMP.Расход) As КонОст
+				FROM
+					(
+					SELECT
+						TabRegOst.SP2046 As Товар,
+						TabRegOst.SP2047 As Склад,
+						TabRegOst.SP2049 As НачОст,
+						0 As Приход,
+						0 As Расход
+					FROM
+						[dbo].[RG2051] As TabRegOst
+					WHERE
+						TabRegOst.PERIOD = @PERIODR
+					UNION ALL
+					SELECT
+						TabReg.SP2046 As Товар,
+						TabReg.SP2047 As Склад,
+						0 As НачОст,
+						-- пишет либо количество прихода, либо 0(расход)
+						(TabReg.SP2049*((DEBKRED+1)%2)) As Приход,
+						(TabReg.SP2049*DEBKRED) As Расход
+					FROM
+						[dbo].[RA2051] As TabReg
+					INNER JOIN [dbo].[_1SJOURN] As TabJ
+						ON (TabReg.IDDOC = TabJ.IDDOC)
+					WHERE
+						TabJ.DATE_TIME_IDDOC >= @PERIODN
+						AND TabJ.DATE_TIME_IDDOC <= @PERIODK
+					) As TMP -- остатки из регистра + из регистра движений документов
+					WHERE TMP.Товар=@nomID AND TMP.Склад IN (SELECT S2.ID FROM [SC288] S2 WHERE S2.ISMARK=0)
+				GROUP BY TMP.Товар, TMP.Склад
+	) RG
+	LEFT JOIN [dbo].[SC288] S ON S.ID=RG.Склад AND S.ISMARK=0
+
+
+	RETURN
+END

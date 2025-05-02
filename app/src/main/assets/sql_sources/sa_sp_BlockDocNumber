@@ -1,0 +1,24 @@
+-- =============================================
+-- Description:	Блокировать, разблокировать номер чека
+-- =============================================
+CREATE PROCEDURE [dbo].[sa_sp_BlockDocNumber]
+	@DNPREFIX char(28),
+	@DOCNUMBER char(24),
+	@PERIOD varchar(10),
+	@BLOCK bit	-- 1-блокировать
+				-- 0-разблокировать
+AS
+BEGIN
+    -- пустым приходит при освобождении чеком
+    SET @DNPREFIX = ISNULL(@DNPREFIX,CAST( (select [dbo].[sa_udf_GetDnPrefix] ('1473',@PERIOD)) as char(28) ))
+	SET @BLOCK = ISNULL(@BLOCK,0)
+
+	DELETE
+	FROM [dbo].[_1SDNLOCK]
+	WHERE  RTRIM(LTRIM(DNPREFIX))=RTRIM(LTRIM(@DNPREFIX)) AND RTRIM(LTRIM(DOCNO))=RTRIM(LTRIM(@DOCNUMBER))
+
+	IF @BLOCK=1
+	BEGIN
+		INSERT INTO [dbo].[_1SDNLOCK] VALUES(@DNPREFIX,@DOCNUMBER)
+	END
+END

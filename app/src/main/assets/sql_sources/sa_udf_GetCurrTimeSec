@@ -1,0 +1,20 @@
+-- =============================================
+-- Description:	Возвращает время в секундах от начала текущего дня,
+--				закодированное в 36-ричной системе
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetCurrTimeSec]
+(
+)
+RETURNS char(6)
+AS
+BEGIN
+	DECLARE @currDate datetime
+	SET @currDate = GETDATE()
+	DECLARE @timeIDDOC char(6)
+	SELECT @timeIDDOC = [dbo].[sa_udf_AddSpaces] (
+								(SELECT [dbo].[sa_udf_ConvertToTS] (DATEDIFF(second,DATEADD(dd, 0, DATEDIFF(dd, 0, GETDATE())),@currDate)*10000))
+								,6
+								,1)
+	RETURN @timeIDDOC
+
+END

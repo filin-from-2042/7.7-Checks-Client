@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Сеть">
+        <EditTextPreference
+            android:defaultValue="@string/s_default_address"
+            android:dialogTitle="Введите адрес сервера в формате ***.***.***.***"
+            android:inputType="phone"
+            android:key="@string/s_key_address"
+            android:summary="Устанавливает адрес sql-сервера 1с"
+            android:title="Адрес sql-сервера 1с" />
+        <EditTextPreference
+            android:defaultValue="@string/s_default_port"
+            android:dialogTitle="Введите номер порта"
+            android:inputType="phone"
+            android:key="@string/s_key_port"
+            android:summary="Устанавливает номер порта sql-сервера 1с"
+            android:title="Порт sql-сервера 1с" />
+        <EditTextPreference
+            android:defaultValue="@string/s_default_db"
+            android:dialogTitle="Введите называние базы данных"
+            android:inputType="text"
+            android:key="@string/s_key_db"
+            android:summary="Устанавливает называние базы данных на sql-сервере"
+            android:title="Название базы данных" />
+        <EditTextPreference
+            android:defaultValue="@string/s_default_scheme"
+            android:dialogTitle="Называние схемы базы данных"
+            android:inputType="text"
+            android:key="@string/s_key_scheme"
+            android:summary="Устанавливает называние схемы базы данных на sql-сервере"
+            android:title="Называние схемы базы данных" />
+        <EditTextPreference
+            android:defaultValue="@string/s_default_username"
+            android:dialogTitle="Введите имя пользователя базы данных sql-сервера"
+            android:inputType="text"
+            android:key="@string/s_key_username"
+            android:summary="Устанавливает имя пользователя базы данных sql-сервера"
+            android:title="Имя пользователя sql-сервера" />
+        <EditTextPreference
+            android:defaultValue="@string/s_default_password"
+            android:dialogTitle="Введите пароль пользователя sql-сервера"
+            android:inputType="textPassword"
+            android:key="@string/s_key_password"
+            android:summary="Устанавливает пароль пользователя sql-сервера"
+            android:title="Пароль пользователя sql-сервера" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Конфигурация">
+        <ListPreference
+            android:key="@string/s_key_period"
+            android:title="Периодичность"
+            android:dialogTitle="Выбор периодичности"
+            android:entries="@array/dnprefix_types_entries"
+            android:entryValues="@array/dnprefix_types_values"
+            android:defaultValue="@string/s_default_period" />
+    </PreferenceCategory>
+</PreferenceScreen>

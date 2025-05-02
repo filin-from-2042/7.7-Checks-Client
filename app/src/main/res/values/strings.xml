@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">Торговый помощник для 1С 7.7</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="la_login_hint">Логин</string>
+    <string name="la_password_hint">Пароль</string>
+    <string name="la_btn_text">Войти</string>
+    <string name="la_btn_preference">Настройки</string>
+
+
+    <string name="dh_key_start_date">startDate</string>
+    <string name="dh_key_end_date">endDate</string>
+
+    <string name="cd_subtitle_label">Сумма: </string>
+
+    <string name="ea_login_key">sessionLogin</string>
+    <string name="ea_password_key">sessionPassword</string>
+    <string name="ea_create_date_key">sessionCreateDate</string>
+
+    <string name="ea_date_format">dd/MM/yyyy</string>
+
+    <string name="nm_check_list">Чеки ККМ</string>
+    <string name="nm_settings">Настройки</string>
+    <string name="nm_db">БД</string>
+    <string name="nm_privacy_policy">Конфиденциальность</string>
+    <string name="nm_exit">Выход</string>
+
+    <string name="s_default_address">192.168.0.1</string>
+    <string name="s_key_address">sql_server_ip</string>
+    <string name="s_default_port">1433</string>
+    <string name="s_key_port">sql_server_port</string>
+    <string name="s_default_db">base</string>
+    <string name="s_key_db">sql_db</string>
+    <string name="s_default_scheme">dbo</string>
+    <string name="s_key_scheme">sql_scheme</string>
+    <string name="s_default_username">sa</string>
+    <string name="s_key_username">sql_username</string>
+    <string name="s_default_password"></string>
+    <string name="s_key_password">sql_password</string>
+    <string name="s_default_period">YEAR</string>
+    <string name="s_key_period">period</string>
+
+    <string name="title_activity_check_detail">CheckDetailActivity</string>
+    <string name="search_item_hint">Код или название товара</string>
+
+    <string name="check_item_dialog_title">Количество товара</string>
+    <string name="kkm_remove_dialog_title">Пометить чек на удаление?</string>
+    <string name="kkm_remove_dialog_toast">Чек помечен на удаление</string>
+    <string name="edit">Редактировать</string>
+    <string name="remove">Удалить</string>
+
+    <string name="date_picker_dialog_title">Выберите дату</string>
+    <string name="clf_date_range_label_start">Начало периода</string>
+    <string name="clf_date_range_label_end">Конец периода</string>
+
+    <string name="tm_check_items_empty">В чеке отсутствуют товары</string>
+    <string name="tm_check_remains_empty">Нет в наличии</string>
+
+
+    <string name="server_not_available">Сервер недоступен</string>
+    <string name="server_connection_error">Ошибка поключения к серверу</string>
+    <string name="user_authorization_success">Авторизация прошла успешно</string>
+    <string name="user_incorrect_login_password">Пользователь на найден</string>
+    <string name="user_fill_data_msg">Пожалуйста, заполните имя пользователя и пароль</string>
+
+    <!-- TextInputLayout fix error -->
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
+
+    <string name="no_data">Номенклатура не найдена</string>
+
+    <string name="err_range_date">Указан некорректный диапазон</string>
+    <string name="index_group_name">Индексы</string>
+    <string name="sp_group_name">Хранимые процедуры</string>
+    <string name="udf_group_name">Функции (udf)</string>
+    <string name="button_create_all">Создать все</string>
+    <string name="indexes_all">все индексы</string>
+    <string name="udfs_all">все udf</string>
+    <string name="sps_all">все процедуры</string>
+    <string name="logoDescription">Логотип Торговый помощник для 1С 7.7</string>
+    <string name="startDateDescIcon">Начало диапазона</string>
+    <string name="endDateRangeIcon">Конец диапазона</string>
+    <string name="companyIconDescription">Иконка компания</string>
+    <string name="stockIconDecription">Иконка склад</string>
+    <string name="cashboxIconDescription">Иконка касса</string>
+    <string name="totalIconDescription">Иконка всего</string>
+    <string name="ndsIconDescription">Иконка НДС</string>
+    <string name="returnIconDescription">Иконка возврат</string>
+    <string name="personIconDescription">Иконка пользователь</string>
+    <string name="itemTypeIconDescription">Тип объекта в списке</string>
+    <string name="iconMarkDescription">Иконка проведения документа</string>
+    <string name="statusIWIconDescription">Иконка существования на сервере</string>
+    <string name="actionIWIconDescription">Иконка отсутствия на сервере</string>
+    <string name="bulletIconDescription">Иконка списка</string>
+    <string name="numberType">Целое</string>
+    <string name="numberTypeFloat">Дробное</string>
+    <string name="companyText">Фирма</string>
+    <string name="storeText">Склад</string>
+    <string name="cashboxText">Касса</string>
+    <string name="totalText">Всего</string>
+    <string name="ndsText">НДС</string>
+    <string name="reasonText">Основание</string>
+    <string name="usernameText">Пользователь</string>
+
+</resources>

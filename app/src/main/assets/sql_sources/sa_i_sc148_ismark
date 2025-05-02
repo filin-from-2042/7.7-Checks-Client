@@ -1,0 +1,9 @@
+CREATE NONCLUSTERED INDEX [sa_i_sc148_ismark] ON [dbo].[SC148]
+(
+	[ISMARK] ASC
+)
+INCLUDE ( [ID],
+[CODE],
+[DESCR],
+[SP131],
+[SP132])

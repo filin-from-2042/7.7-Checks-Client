@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_check_list"
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="@string/nm_check_list" />
+
+
+    </group>
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/nav_db_system"
+            android:icon="@drawable/ic_storage_black_24dp"
+            android:title="@string/nm_db" />
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:icon="@drawable/ic_privacy_policy"
+            android:title="@string/nm_privacy_policy" />
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@drawable/ic_exit_to_app"
+            android:title="@string/nm_exit" />
+    </group>
+
+</menu>

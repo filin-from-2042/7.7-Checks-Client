@@ -1,0 +1,67 @@
+-- =============================================
+-- Description:	Возвращает новый доступный номер для чека
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetFreeNumber]
+(
+ 	@IBPREFIX varchar(266),
+ 	@CURDNPREFIX char(18)
+ )
+ RETURNS varchar(max)
+ AS
+ BEGIN
+     DECLARE @LASTDOC varchar(max)
+    DECLARE @DOCSLEN int
+	SET @IBPREFIX = RTRIM(LTRIM(@IBPREFIX))
+
+	SELECT TOP 1 @LASTDOC = R.DOCNO
+	FROM (
+		-- пометку на удаление не учитываем, так в самой 1с
+		select J.DOCNO
+		FROM [dbo].[_1SJOURN] J
+		WHERE J.DNPREFIX=@CURDNPREFIX
+			AND SUBSTRING(J.DOCNO,1,LEN(@IBPREFIX))=@IBPREFIX
+		UNION
+		SELECT L.DOCNO
+		FROM [dbo].[_1SDNLOCK] L
+		WHERE L.DNPREFIX = @CURDNPREFIX
+			AND SUBSTRING(L.DOCNO,1,LEN(@IBPREFIX))=@IBPREFIX
+	) R
+	ORDER BY R.DOCNO DESC
+
+	DECLARE @intAlpha INT
+	-- числовая часть идентификатора
+	DECLARE @NUMBERPART varchar(10)
+	-- символьная часть идентификатора
+	DECLARE @SYMPART varchar(10)
+	SET @SYMPART = ''
+	SET @NUMBERPART = STUFF(@LASTDOC,1,LEN(@IBPREFIX),NULL)
+	-- ищем символы в иденификаторе, сохраняем в переменную с символьной частью идентификатора и отсекаем из переменной с числовой частью
+	SET @intAlpha = PATINDEX('%[^0-9 ]%', @NUMBERPART)
+	WHILE @intAlpha > 0
+	BEGIN
+		SET @SYMPART =@SYMPART+SUBSTRING(@NUMBERPART, @intAlpha, 1);
+		SET @NUMBERPART = STUFF(@NUMBERPART, @intAlpha, 1, NULL )
+		SET @intAlpha = PATINDEX('%[^0-9 ]%', @NUMBERPART )
+	END
+
+	IF @NUMBERPART IS NULL
+	BEGIN
+		SET @NUMBERPART= '0'
+	END
+
+	-- длина всего номера документа
+	SET @DOCSLEN = LEN(RTRIM(LTRIM(@LASTDOC)))
+	-- длина числовой части номра документа
+	DECLARE @NUMBERLEN int
+	SET @NUMBERLEN = @DOCSLEN-LEN(@SYMPART)-LEN(@IBPREFIX)
+	-- новый номер  документа
+	DECLARE @NNINT int
+	SET @NNINT = CAST(@NUMBERPART AS int)+1
+	-- длина нового номера документа (на случай, если прибавился разряд)
+	DECLARE @NNRLEN int
+	SET @NNRLEN = LEN(@NNINT)
+
+	SET @NUMBERPART = REPLICATE('0',@NUMBERLEN-@NNRLEN) + CAST(@NNINT AS varchar(max))
+
+	RETURN @IBPREFIX+@SYMPART+@NUMBERPART
+END

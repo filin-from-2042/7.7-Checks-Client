@@ -1,0 +1,52 @@
+-- =============================================
+-- Description:	Возвращает DNPREFIX для документа
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetDnPrefix]
+(
+	@docTypeId varchar(4),
+	@period varchar(10)
+)
+RETURNS char(18)
+AS
+BEGIN
+	DECLARE @dnprefix varchar(18)
+	DECLARE @currDate datetime
+	SET @currDate = GETDATE()
+
+	DECLARE @year varchar(4)
+	DECLARE @quarter varchar(2)
+	DECLARE @month varchar(2)
+	DECLARE @day varchar(4)
+
+	SET @dnprefix = (select [dbo].[sa_udf_AddSpaces] (@docTypeId,10,0));
+
+	IF @period='ALL'
+    BEGIN
+        RETURN CAST(@dnprefix as char(18))
+    END
+
+	SET @year = CAST(YEAR(@currDate) AS varchar(4))
+	IF @period='YEAR'
+	BEGIN
+		RETURN CAST(@dnprefix + (select [dbo].[sa_udf_AddSpaces](@year,8,1)) as char(18))
+	END
+
+	SET @month = RIGHT('0'+CAST(MONTH(@currDate) AS varchar(4)),2)
+	IF @period='MONTH'
+	BEGIN
+		RETURN CAST(@dnprefix + (select [dbo].[sa_udf_AddSpaces](@year+@month,8,1)) as char(18))
+	END
+	-- для определения квартала используется нахлест в 2 месяца и округление в меньшую сторону. Квартал пишется не 02, а 2
+	IF @period='QUARTER'
+	BEGIN
+		RETURN CAST(@dnprefix + (select [dbo].[sa_udf_AddSpaces](@year+CAST(FLOOR((@month+2)/3) AS varchar(4)),8,1)) as char(18))
+	END
+
+	SET @day = RIGHT('0'+CAST(DAY(@currDate) AS varchar(4)),2)
+	IF @period='DAY'
+	BEGIN
+		RETURN CAST(@dnprefix + (select [dbo].[sa_udf_AddSpaces](@year+@month+@day,8,1)) as char(18))
+	END
+
+	RETURN NULL
+END

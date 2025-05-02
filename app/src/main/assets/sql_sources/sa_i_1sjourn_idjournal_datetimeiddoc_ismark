@@ -1,0 +1,12 @@
+CREATE NONCLUSTERED INDEX [sa_i_1sjourn_idjournal_datetimeiddoc_ismark] ON [dbo].[_1sjourn]
+(
+	[IDJOURNAL] ASC,
+	[DATE_TIME_IDDOC] ASC,
+	[ISMARK] ASC
+)
+INCLUDE ( [ROW_ID],
+[IDDOC],
+[IDDOCDEF],
+[DOCNO],
+[CLOSED],
+[SP1872])

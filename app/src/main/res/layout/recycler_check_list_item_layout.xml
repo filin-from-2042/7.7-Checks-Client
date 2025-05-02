@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/kkm_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/rcl_row_text_padding_bottom"
+    android:paddingLeft="@dimen/rcl_container_left_padding"
+    android:paddingRight="@dimen/rcl_container_left_padding"
+    android:paddingTop="@dimen/rcl_row_text_padding_top">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/rcl_row_text_padding_left">
+
+        <TextView
+            android:id="@+id/firstTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/msg_text_primary" />
+
+        <TextView
+            android:id="@+id/secondaryTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/thirdTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/remains" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_check_item"
+            android:contentDescription="@string/itemTypeIconDescription"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/summTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/secondaryDarkColor"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dateTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/icon_mark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:maxHeight="38dp"
+        android:maxWidth="22dp"
+        android:paddingTop="16dp"
+        app:srcCompat="@drawable/ic_mark_closed"
+        android:contentDescription="@string/iconMarkDescription"/>
+</RelativeLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dnprefix_types_entries">
+        <item>По всем данного вида</item>
+        <item>В пределах года</item>
+        <item>В пределах квартала</item>
+        <item>В пределах месяца</item>
+        <item>В пределах дня</item>
+    </string-array>
+    <string-array name="dnprefix_types_values">
+        <item>ALL</item>
+        <item>YEAR</item>
+        <item>QUARTER</item>
+        <item>MONTH</item>
+        <item>DAY</item>
+    </string-array>
+</resources>

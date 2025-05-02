@@ -1,0 +1,51 @@
+-- =============================================
+-- Description:	Возвращает данные по номенклатуре
+-- =============================================
+CREATE FUNCTION [dbo].[sa_udf_GetNomenclatureData]
+(
+	@nomID char(9)
+)
+RETURNS @RESULT TABLE
+(
+	NOMID char(9),
+	CODE char(6),
+	ARTICUL char(25),
+	DESCR char(70),
+	WEIGHT numeric(13,3),
+	NOMPRICE varchar(255)
+)
+AS
+BEGIN
+	-- id типа цен из [SC301]
+	DECLARE @PRICETYPE varchar(255)
+
+	SELECT TOP 1 @PRICETYPE =[VALUE]
+	FROM [dbo].[_1SCONST]
+	WHERE RTRIM(LTRIM(ID))='23' and RTRIM(LTRIM(OBJID))='0' and DATE<='1753-01-01 00:00:00'
+
+	-- id цены из справочника цен
+	DECLARE @PRICEID char(9)
+	SELECT TOP 1 @PRICEID=[ID]
+	FROM [dbo].[SC366]
+	WHERE RTRIM(LTRIM(PARENTEXT)) = RTRIM(LTRIM(@nomID)) AND SP363 = @PRICETYPE AND ISMARK=0
+
+	-- цена номенклатуры
+	DECLARE @NOMPRICE varchar(255)
+	SELECT TOP 1 @NOMPRICE=[VALUE]
+	FROM [dbo].[_1SCONST]
+	WHERE ID=364 AND OBJID=@PRICEID AND DATE<=GETDATE()
+	ORDER BY ID DESC, OBJID DESC, DATE DESC, TIME DESC, DOCID DESC
+
+	INSERT INTO @RESULT
+	SELECT NOM.ID
+		,NOM.CODE
+		,NOM.SP131
+		,NOM.DESCR
+		,UN.SP91
+		,@NOMPRICE
+	FROM [dbo].[SC148] NOM
+	LEFT JOIN [dbo].[SC96] UN ON NOM.[SP132]=	UN.[ID] AND UN.ISMARK=0
+	WHERE RTRIM(LTRIM(NOM.ID))=RTRIM(LTRIM(@nomID)) AND NOM.ISMARK=0
+
+	RETURN
+END
